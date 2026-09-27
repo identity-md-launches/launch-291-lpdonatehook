@@ -1,0 +1,26 @@
+{
+  "kind": "univ4_hook",
+  "hook": {
+    "contract": "LPDonateHook",
+    "constructorArgs": [
+      "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543"
+    ],
+    "permissions": [
+      "afterSwap",
+      "afterSwapReturnDelta"
+    ]
+  },
+  "token": {
+    "contract": "RBTE",
+    "name": "Rebate",
+    "symbol": "RBTE",
+    "decimals": 18
+  },
+  "pool": {
+    "pairedCurrency": "0x0000000000000000000000000000000000000000",
+    "fee": 3000,
+    "tickSpacing": 60,
+    "initialPrice": "792281625142643375935439503360000"
+  },
+  "notes": "Technical description of src/LPDonateHook.sol and src/RBTE.sol for the approved Sepolia launch. The hook's sole constructor argument is the specified Sepolia PoolManager; RBTE has a zero-argument constructor. The pool uses native ETH as currency0 and deployed RBTE as currency1. initialPrice is decimal sqrtPriceX96 = 10000 * 2^96, corresponding to 100,000,000 RBTE per ETH with both currencies at 18 decimals. This adopts the existing test/helpers/LaunchParameters.sol rehearsal price; the workflow supplies no numerical price. The rehearsal initializes above its RBTE-only position's upper tick, seeds without ETH, and exercises the first buy. Actual factory seed parameters must be reconciled with this price separately. Only afterSwap and afterSwapReturnDelta are enabled; all other permissions are false. The constructor validates address permission bits 0x0044 under mask 0x3fff, requiring a matching CREATE2 address. All callbacks require the immutable PoolManager. On native-ETH pools, afterSwap donates floor(abs(unspecified core swap delta) * 50 / 10000) through PoolManager.donate and returns an equal positive unspecified delta, cancelling the hook's debt within the swap without taking funds or minting claims. The unspecified leg is output for exact-input swaps and input for exact-output swaps: ETH for exact-input sells and exact-output buys, RBTE otherwise. Donations are skipped for non-native currency0, rounded-zero amounts, zero post-swap in-range liquidity, or an adjusted trader delta below int128.min. Donations benefit LPs in range at the post-swap tick, including same-block JIT liquidity. Donated(poolId, currency, amount) and totalDonated(poolId, currency) expose successful donations, isolated per pool and currency. sender and unauthenticated hookData are ignored. Neither contract has an administrative or upgrade interface. Exported ABIs are docs/abi/LPDonateHook.json and docs/abi/RBTE.json. Deployment policy and signed artifact linkage belong to services; this manifest does not assert independent review, attestation, admission or deployment."
+}
