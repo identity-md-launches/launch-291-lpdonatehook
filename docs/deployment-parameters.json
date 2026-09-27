@@ -1,0 +1,34 @@
+{
+  "chainId": 11155111,
+  "poolManager": "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543",
+  "token": {
+    "contract": "src/RBTE.sol:RBTE",
+    "constructorArguments": [],
+    "name": "Rebate",
+    "symbol": "RBTE",
+    "decimals": 18,
+    "totalSupplyBaseUnits": "1000000000000000000000000000"
+  },
+  "hook": {
+    "contract": "src/LPDonateHook.sol:LPDonateHook",
+    "constructorArguments": ["0xE03A1074c86CFeDd5C142C4F04F1a1536e203543"],
+    "permissionMask": "0x3fff",
+    "permissionBits": "0x0044",
+    "donationBps": 50
+  },
+  "pool": {
+    "currency0": "0x0000000000000000000000000000000000000000",
+    "currency1": "RBTE deployment address",
+    "fee": 3000,
+    "tickSpacing": 60
+  },
+  "rehearsalAssumptions": {
+    "status": "Not supplied by the workflow; reconcile with the separately authored manifest and actual factory before deployment",
+    "sqrtPriceX96": "792281625142643375935439503360000",
+    "ethPerRBTE": "0.00000001",
+    "tickLower": -887220,
+    "tickUpper": 184200,
+    "seedRBTEBaseUnits": "1000000000000000000000000000",
+    "seedETHWei": "0"
+  }
+}

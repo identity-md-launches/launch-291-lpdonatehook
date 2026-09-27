@@ -1,0 +1,47 @@
+[
+  {
+    "repository": "https://github.com/Uniswap/v4-core",
+    "commit": "46c6834698c48bc4a463a86d8420f4eb1d7f3b75",
+    "archiveSha256": "669c7c7903378bfd327072982008c447517c55b03d6ff1cb7bd9a7f04b6e47eb",
+    "path": "lib/v4-core",
+    "included": [
+      "src/ (excluding test helpers other than PoolSwapTest.sol, PoolModifyLiquidityTest.sol and PoolTestBase.sol)",
+      "licenses/",
+      "test/utils/CurrencySettler.sol"
+    ]
+  },
+  {
+    "repository": "https://github.com/foundry-rs/forge-std",
+    "commit": "77041d2ce690e692d6e03cc812b57d1ddaa4d505",
+    "archiveSha256": "a387f7c2a10387f889b0d18b999cfa667a5273ac11cc11e18923022eb8b24bc3",
+    "path": "lib/forge-std",
+    "included": [
+      "src/",
+      "LICENSE"
+    ]
+  },
+  {
+    "repository": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+    "commit": "acd4ff74de833399287ed6b31b4debf6b2b35527",
+    "archiveSha256": "7ca6287b8a0d0db67b5923c047365025e612dbaf58a49cbe74d05aa5213e36f9",
+    "path": "lib/openzeppelin-contracts",
+    "included": [
+      "LICENSE",
+      "contracts/interfaces/draft-IERC6093.sol",
+      "contracts/token/ERC20/ERC20.sol",
+      "contracts/token/ERC20/IERC20.sol",
+      "contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "contracts/utils/Context.sol"
+    ]
+  },
+  {
+    "repository": "https://github.com/transmissions11/solmate",
+    "commit": "4b47a19038b798b4a33d9749d25e570443520647",
+    "archiveSha256": "9aa78449f8bc10931520500ec24734f089af9ac875a3334d8b512f8727241667",
+    "path": "lib/solmate",
+    "included": [
+      "src/auth/Owned.sol",
+      "LICENSE"
+    ]
+  }
+]
