@@ -72,7 +72,43 @@ contract LaunchRehearsalTest is Test {
         _firstBuy(false);
     }
 
+    function testFuzz_firstBuyAndImmediateSale(uint96 size, bool exactInput) public {
+        uint256 amount =
+            exactInput ? bound(uint256(size), 1e8, 1 ether) : bound(uint256(size), 1 ether, 50_000_000 ether);
+        _firstBuy(exactInput, amount);
+    }
+
+    function test_failedFirstBuyLeavesFactorySeedAndDonationsUntouched() public {
+        uint256 tokensBefore = token.balanceOf(address(manager));
+        (uint256 growth0, uint256 growth1) = manager.getFeeGrowthGlobals(key.toId());
+        // afterSwap runs, but the router cannot pay the native input at settlement.
+        vm.expectRevert();
+        router.swap(
+            key,
+            SwapParams(true, int256(1_000_000 ether), TickMath.MIN_SQRT_PRICE + 1),
+            PoolSwapTest.TestSettings(false, false),
+            ""
+        );
+        (uint160 price,,,) = manager.getSlot0(key.toId());
+        (uint256 after0, uint256 after1) = manager.getFeeGrowthGlobals(key.toId());
+        assertEq(price, P.SQRT_PRICE_X96);
+        assertEq(manager.getLiquidity(key.toId()), 0);
+        assertEq(after0, growth0);
+        assertEq(after1, growth1);
+        assertEq(token.balanceOf(address(manager)), tokensBefore);
+        assertEq(token.balanceOf(address(this)), 0);
+        assertEq(address(manager).balance, 0);
+        assertEq(hook.totalDonated(key.toId(), key.currency0), 0);
+        assertEq(hook.totalDonated(key.toId(), key.currency1), 0);
+        _emptyHook();
+        _firstBuy(false);
+    }
+
     function _firstBuy(bool exactInput) internal {
+        _firstBuy(exactInput, exactInput ? 1 ether : 1_000_000 ether);
+    }
+
+    function _firstBuy(bool exactInput, uint256 amount) internal {
         assertEq(address(manager).balance, 0);
         assertEq(address(router).balance, 0);
         assertEq(token.balanceOf(address(this)), 0);
@@ -80,9 +116,7 @@ contract LaunchRehearsalTest is Test {
         vm.recordLogs();
         BalanceDelta delta = router.swap{value: 2 ether}(
             key,
-            SwapParams(
-                true, exactInput ? -int256(1 ether) : int256(1_000_000 ether), TickMath.MIN_SQRT_PRICE + 1
-            ),
+            SwapParams(true, exactInput ? -int256(amount) : int256(amount), TickMath.MIN_SQRT_PRICE + 1),
             PoolSwapTest.TestSettings(false, false),
             ""
         );
